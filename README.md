@@ -85,7 +85,7 @@ To enable vision-based navigation:
 ```bash
 ros2 launch rl_fra2mo_description fra2mo_navigation_vision.launch.py
 ```
-
+remember to also start the AMCL localization node
 ### Autonomous Exploration and Mapping
 
 To launch autonomous environment exploration:

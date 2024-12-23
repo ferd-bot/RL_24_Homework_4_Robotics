@@ -17,7 +17,7 @@ git clone https://github.com/ferd-bot/RL_24_Homework_4_Robotics.git
 colcon build
 source install/setup.bash
 ```
-
+**Note**: The repository download includes extra files. Manually remove unnecessary files and move the required ones into the `src` folder.
 ---
 
 ## Visualization and Simulation

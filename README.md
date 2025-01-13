@@ -1,38 +1,52 @@
-# Homework_4 Instructions
 
-Ferdinando Dionisio, Vittorio Lisi, Giovanni Gabriele Imbimbo, Emanuele Cifelli
+# Homework 4: Robotics Instructions
+
+**Contributors:** Ferdinando Dionisio, Vittorio Lisi, Giovanni Gabriele Imbimbo, Emanuele Cifelli
 
 ## Overview
 
-This guide provides updated instructions for working with the robotics package, focusing on Gazebo simulation, navigation tasks, mapping and localization, and advanced features like vision-based navigation.
+This guide provides step-by-step instructions for working with the robotics package, including Gazebo simulation, navigation tasks, mapping and localization, and vision-based navigation. Follow these guidelines to ensure successful setup and operation.
 
 ---
 
-## Prerequisites
+## **Setup Instructions**
 
-Ensure that you have cloned the repository and built the workspace:
+### 1. Clone the Repository
+
+To clone the repository, navigate to the `src` directory of your ROS2 workspace and execute:
 
 ```bash
-git clone https://github.com/ferd-bot/RL_24_Homework_4_Robotics.git
+cd src
+git clone https://github.com/ferd-bot/RL_24_Homework_4_Robotics.git .
+```
+
+**Important:**  
+The above command (`git clone` with a dot `.`) works only if the target directory is empty. If it's not, you can:
+
+1. Remove all files in the directory:
+   ```bash
+   rm -rf *
+   ```
+2. Alternatively, clone the repository without the dot and manually move the contents of the `RL_24_Homework_4_Robotics` folder into the `src` directory.
+
+### 2. Configure and Build the Workspace
+
+Navigate to your ROS2 workspace and clean previous builds:
+
+```bash
+cd ~/ros2_ws
+rm -rf build/ install/ log/
 colcon build
 source install/setup.bash
 ```
-**Note**: The repository download includes extra files. Manually remove unnecessary files and move the required ones into the `src` folder.
+
 ---
 
-## Visualization and Simulation
+## **Simulation and Navigation**
 
-### Robot Visualization in RViz
+### 1. Start the Simulation in Gazebo
 
-To launch the robot visualization in RViz:
-
-```bash
-ros2 launch rl_fra2mo_description display_fra2mo.launch.py
-```
-
-### Simulation in Gazebo
-
-To start the simulation in Gazebo:
+Launch the Gazebo simulation environment using:
 
 ```bash
 ros2 launch rl_fra2mo_description gazebo_fra2mo.launch.py
@@ -40,146 +54,94 @@ ros2 launch rl_fra2mo_description gazebo_fra2mo.launch.py
 
 ---
 
-## Mapping and Localization Commands
+### 2. Autonomous Exploration and Mapping
 
-### SLAM for Environment Mapping
+#### Execution Mode 1: Autonomous Exploration
 
-To launch SLAM and create a map of the environment:
-
-```bash
-ros2 launch rl_fra2mo_description fra2mo_slam.launch.py
-```
-
-### Localization with AMCL
-
-To start robot localization using AMCL:
-
-```bash
-ros2 launch rl_fra2mo_description fra2mo_amcl.launch.py
-```
-
-### Saving the Map
-
-To save a generated map:
-
-```bash
-ros2 run nav2_map_server map_saver_cli -f map
-```
-
----
-
-## Navigation
-
-### Autonomous Navigation with AMCL (Nav2)
-
-To enable autonomous navigation using Nav2:
-
-```bash
-ros2 launch rl_fra2mo_description fra2mo_navigation.launch.py
-```
-
-### Vision-Based Navigation
-
-To enable vision-based navigation:
-
-```bash
-ros2 launch rl_fra2mo_description fra2mo_navigation_vision.launch.py
-```
-remember to also start the AMCL localization node
-### Autonomous Exploration and Mapping
-
-To launch autonomous environment exploration:
+To start autonomous exploration, launch the following:
 
 ```bash
 ros2 launch rl_fra2mo_description fra2mo_explore.launch.py
 ```
 
----
-
-## Manual and Advanced Control
-
-### Manual Robot Control with Keyboard
-
-To manually control the robot via keyboard:
-
-```bash
-ros2 run teleop_twist_keyboard teleop_twist_keyboard
-```
-
-### Sending the Robot to the Initial Pose
-
-To send the robot to an initial position:
-
-```bash
-ros2 topic pub /goal_pose geometry_msgs/PoseStamped "{
-  header: {
-    frame_id: 'map',
-    stamp: {sec: 0, nanosec: 0}
-  },
-  pose: {
-    position: {x: 0.0, y: 0.0, z: 0.1},
-    orientation: {x: 0.0, y: 0.0, z: -0.7071, w: 0.7071}
-  }
-}"
-```
-
-### Running follow_waypoints.py
-
-To execute the `follow_waypoints.py` script:
+This launch file initializes the robot's exploration mode in RViz. Once the robot completes the exploration, you can run the waypoint-following script:
 
 ```bash
 ros2 run rl_fra2mo_description follow_waypoints.py
 ```
 
-### Running task.py
+The waypoints are specified in the `new_goals.yaml` file located in the `config` directory. To use the waypoints from Homework 2 instead, replace `new_goals.yaml` with `goals.yaml` in the script.
 
-To execute the `task.py` script:
+The navigation operates in a new world, `leonardo_race_field_new.sdf`, with an updated map, `mappa_mondo_1.pgm`.
+
+---
+
+### 3. Vision-based Navigation
+
+For vision-based navigation with AMCL, follow these steps:
+
+1. Start the Gazebo simulation:
+   ```bash
+   ros2 launch rl_fra2mo_description gazebo_fra2mo.launch.py
+   ```
+2. Launch SLAM-based localization:
+   ```bash
+   ros2 launch rl_fra2mo_description fra2mo_amcl.launch.py
+   ```
+3. Start the vision-based navigation node, which includes AMCL and RViz:
+   ```bash
+   ros2 launch rl_fra2mo_description fra2mo_navigation_vision.launch.py
+   ```
+4. Run the Aruco detection script to search for markers:
+   ```bash
+   ros2 run rl_fra2mo_description task.py
+   ```
+
+To visualize the Aruco marker's detection, open `rqt` in another terminal and subscribe to the topic `/aruco_detect/result`:
 
 ```bash
-ros2 run rl_fra2mo_description task.py
-```
-
-### Recording a Bag
-
-To record a bag with specific data:
-
-```bash
-ros2 bag record -o recorded_bag /plan /pose
-```
-
-### Visualizing TF Frames
-
-To visualize TF frames:
-
-```bash
-ros2 topic echo /tf_static
-ros2 run tf2_ros tf2_echo camera_link aruco_marker_frame
+rqt
 ```
 
 ---
 
-## Basic Commands
+### 4. Visualizing TF Frames
 
-### Sending Velocity Commands
+To visualize transformation frames during the simulation, you can use the following commands:
 
-To manually send velocity commands:
+1. **Echo static transformations**:  
+   View static transformation frames in real-time:
+   ```bash
+   ros2 topic echo /tf_static
+   ```
 
-```bash
-ros2 topic pub /cmd_vel geometry_msgs/msg/Twist "{linear: {x: 0.2}, angular: {z: 0.2}}"
-```
+2. **Inspect specific frames**:  
+   For example, to check the transformation between `camera_link` and `aruco_marker_frame`, run:
+   ```bash
+   ros2 run tf2_ros tf2_echo camera_link aruco_marker_frame
+   ```
+
+**Note**: These topics can be monitored while running the `task.py` script during the Aruco detection task. This allows you to observe the transformations and validate marker tracking dynamically within the simulation.
 
 ---
 
-## Notes and Tips
+## **Additional Notes**
 
-1. **Multiple Terminals**: Ensure you run each node or command in a separate terminal after sourcing the workspace (`source install/setup.bash`).
-2. **Video Demonstrations**: Videos of key tasks are available:
+1. **Multiple Terminals:**  
+   Run each command or node in a separate terminal after sourcing the workspace:
+   ```bash
+   source install/setup.bash
+   ```
 
-- `https://youtu.be/_O3qW9CAqX8` - Autonomous navigation with new goals
-- `https://youtu.be/pcC26Ym-iqM` - Vision-based navigation
+2. **Video Demonstrations:**  
+   - [Autonomous Navigation with New Goals](https://youtu.be/_O3qW9CAqX8)  
+   - [Vision-based Navigation](https://youtu.be/pcC26Ym-iqM)
 
-3. **Troubleshooting**: If the simulation or tracking does not work as expected:
-   - Verify that all required nodes are running.
-   - Check for error messages in each terminal.
+3. **Troubleshooting:**  
+   If the simulation or tracking fails:
+   - Ensure all required nodes are running.
+   - Check terminal outputs for error messages.
 
-With these instructions, you can configure and test advanced simulation tasks, including autonomous navigation, exploration, and vision-based control, as described in the context of Homework_4.
+---
+
+With these instructions, you are equipped to perform advanced robotics tasks such as simulation, autonomous navigation, exploration, and vision-based control for Homework 4.

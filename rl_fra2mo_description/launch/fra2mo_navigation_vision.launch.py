@@ -1,9 +1,10 @@
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, TimerAction
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
+import os
 
 
 def generate_launch_description():
@@ -67,13 +68,20 @@ def generate_launch_description():
     )
 
     # Nodo RViz2
+    rviz_config_file = os.path.expanduser("~/ros2_ws/src/rl_fra2mo_description/rviz_conf/navigation.rviz")
     rviz_node = Node(
         package='rviz2',
         executable='rviz2',
         name='rviz2',
+        arguments=['-d', rviz_config_file],
+        parameters=[{"use_sim_time": True}],
         output='screen',
     )
-
+    # Ritardo di 5 secondi per RViz
+    delayed_rviz_node = TimerAction(
+        period=5.0,
+        actions=[rviz_node]
+    )
     # Restituzione della descrizione del lancio
     return LaunchDescription(
         [
@@ -82,7 +90,7 @@ def generate_launch_description():
             declare_use_sim_time_cmd,
             nav2_bringup_launch,
             aruco_single,  # Nodo ArUco
-            rviz_node,  # Nodo RViz2
+            delayed_rviz_node,  # Nodo RViz2
         ]
     )
 

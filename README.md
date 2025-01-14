@@ -63,8 +63,7 @@ To start autonomous exploration, launch the following:
 ```bash
 ros2 launch rl_fra2mo_description fra2mo_explore.launch.py
 ```
-
-This launch file initializes the robot's exploration mode in RViz. Once the robot completes the exploration, you can run the waypoint-following script:
+To view the robot remember to open Rviz, open "config" and go to "/user/ros2_ws/src/rl_fra2mo_description/rviz_conf/explore.rviz". Once the robot completes the exploration, you can run the waypoint-following script:
 
 ```bash
 ros2 run rl_fra2mo_description follow_waypoints.py
@@ -96,7 +95,7 @@ For vision-based navigation with AMCL, follow these steps:
    ```bash
    ros2 run rl_fra2mo_description task.py
    ```
-
+To view the robot remember to open Rviz, open "config" and go to "/user/ros2_ws/src/rl_fra2mo_description/rviz_conf/navigation.rviz".
 To visualize the Aruco marker's detection, open `rqt` in another terminal and subscribe to the topic `/aruco_detect/result`:
 
 ```bash

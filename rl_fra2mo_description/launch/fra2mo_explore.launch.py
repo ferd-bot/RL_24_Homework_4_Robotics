@@ -19,7 +19,7 @@ def generate_launch_description():
 
     declare_params_file_cmd = DeclareLaunchArgument(
         'params_file',
-        default_value=PathJoinSubstitution([fra2mo_dir, 'config', 'explore.yaml']),
+        default_value="/home/user/ros2_ws/src/rl_fra2mo_description/config/explore.yaml",
         description='Full path to the ROS2 parameters file to use for all launched nodes',
     )
 
@@ -51,6 +51,19 @@ def generate_launch_description():
         }.items(),
     )
 
+    # Rviz con ritardo di 5 secondi
+    rviz_node = TimerAction(
+        period=5.0,  # Delay of 5 seconds
+        actions=[
+            Node(
+                package='rviz2',
+                executable='rviz2',
+                name='rviz2',
+                arguments=['-d', '/home/user/ros2_ws/src/rl_fra2mo_description/rviz_conf/explore.rviz'],
+                output='screen',
+            )
+        ],
+    )
     return LaunchDescription(
         [
             declare_params_file_cmd,
@@ -58,6 +71,7 @@ def generate_launch_description():
             slam_launch,
             nav2_bringup_launch,
             explore_lite_launch,
+            rviz_node,
         ]
     )
 

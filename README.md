@@ -90,7 +90,7 @@ For vision-based navigation using AMCL, follow these steps:
    ros2 launch rl_fra2mo_description fra2mo_navigation_vision.launch.py
    ```
 
-3. Once all nodes are active, start the task script for approaching an obstacle, detecting a marker, and returning to the initial position:
+3. Once all nodes are active, start the task script for approaching an obstacle, detecting a marker, and returning to the initial position (for Aruco TF publish, check "Aruco TF Frame":
    ```bash
    ros2 run rl_fra2mo_description task.py
    ```

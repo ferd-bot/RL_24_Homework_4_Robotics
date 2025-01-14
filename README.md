@@ -69,7 +69,7 @@ ros2 run rl_fra2mo_description follow_waypoints.py
 
 - **Waypoints:**  
   The waypoints are specified in the `new_goals.yaml` file located in the `config` directory.  
-  To use the waypoints from Homework 2, replace `new_goals.yaml` with `goals.yaml` in the script.
+  To use the waypoints from point 2 of Homework, replace `new_goals.yaml` with `goals.yaml` in the script.
 
 - **Environment:**  
   The navigation operates in the `leonardo_race_field_new.sdf` world with the `mappa_mondo_1.pgm` map.

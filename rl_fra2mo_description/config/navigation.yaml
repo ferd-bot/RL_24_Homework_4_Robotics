@@ -200,8 +200,8 @@ local_costmap:
       global_frame: fra2mo/odom
       robot_base_frame: base_footprint
 
-      width: 3
-      height: 3
+      width: 6
+      height: 6
       resolution: 0.02
       rolling_window: True
       always_send_full_costmap: True

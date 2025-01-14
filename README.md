@@ -103,7 +103,7 @@ For vision-based navigation using AMCL, follow these steps:
 
 ---
 
-### 4. Visualizing TF Frames
+### 4. Aruco TF Frame
 
 To visualize transformation frames during the simulation:
 

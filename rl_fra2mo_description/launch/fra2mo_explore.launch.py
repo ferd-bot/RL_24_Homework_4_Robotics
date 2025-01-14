@@ -51,23 +51,6 @@ def generate_launch_description():
         }.items(),
     )
 
-    # Nodo per aprire RViz con una configurazione preimpostata
-    rviz_config_file = os.path.expanduser("~/ros2_ws/src/rl_fra2mo_description/rviz_conf/explore.rviz")
-    rviz_node = Node(
-        package='rviz2',
-        executable='rviz2',
-        name='rviz2',
-        arguments=['-d', rviz_config_file],
-        parameters=[{"use_sim_time": True}],
-        output='screen',
-    )
-
-    # Ritardo di 5 secondi per RViz
-    delayed_rviz_node = TimerAction(
-        period=7.0,
-        actions=[rviz_node]
-    )
-
     return LaunchDescription(
         [
             declare_params_file_cmd,
@@ -75,7 +58,6 @@ def generate_launch_description():
             slam_launch,
             nav2_bringup_launch,
             explore_lite_launch,
-            delayed_rviz_node,  # Aggiunto il nodo RViz con ritardo
         ]
     )
 
